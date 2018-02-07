@@ -1,0 +1,61 @@
+/**************/
+/* Grid Mixins
+/**************/
+
+@function gutters($gutters: map-get($global-config, gutters)) {
+	@return $gutters;
+}
+
+@mixin gutters($gutters: map-get($global-config, gutters)) {
+	padding-left: gutters();
+	padding-right: gutters();
+}
+
+@mixin block($width: map-get($global-config, block--width), $gutters: true) {
+	position: relative;
+	max-width: $width;
+	margin: 0 auto;
+	@if ($gutters == true) {
+	@include gutters();
+	}
+	@include clearfix();
+}
+
+@mixin container($width: map-get($global-config, width)) {
+	max-width: $width;
+	margin: 0 auto;
+	
+	@include screen(md) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+}
+
+@mixin container-flex($width: map-get($global-config, width)) {
+	@include container($width);
+	display: flex;
+}
+
+@function span($columns: map-get($global-config, columns), $container: map-get($global-config, columns)) {
+	@return percentage($columns / $container);
+}
+
+@mixin span($columns: map-get($global-config, columns), $container: map-get($global-config, columns), $flex: false) {
+	width: span($columns, $container);
+	@if ($flex == false) {
+	float: left;
+	}
+	@include gutters();
+}
+@mixin span-flex($columns: map-get($global-config, columns), $container: map-get($global-config, columns)) {
+	width: span($columns, $container);
+	@include gutters();
+}
+
+@mixin push($columns: map-get($global-config, columns), $container: map-get($global-config, columns)) {
+	margin-left: span($columns, $container);
+}
+
+@mixin pull($columns: map-get($global-config, columns), $container: map-get($global-config, columns)) {
+	margin-left: (span($columns, $container) * -1);
+}

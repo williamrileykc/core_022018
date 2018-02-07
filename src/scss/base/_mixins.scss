@@ -1,0 +1,359 @@
+/*********/
+/* Mixins
+/*********/
+
+// Useful mixins downloaded from https://bitbucket.org/calebzahnd/sass-mixins
+
+//The ol' cover EVERYTHING block. Handy.
+@mixin coverer() {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+// A darn fine way to center something
+@mixin centerer() {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+@mixin centererX() {
+	left: 50%;
+	transform: translateX(-50%);
+}
+@mixin centererY() {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+//Vertical align in 3 lines of css.
+@mixin vertical-align() {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+@mixin word-wrap() {
+	word-break:	 break-word;
+	-webkit-hyphens: auto;
+	-moz-hyphens:	  auto;
+	hyphens:		  auto;
+}
+
+@mixin ellipsis() {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+
+
+
+@mixin opacity($opacity) {
+	opacity: $opacity;
+	$opacity-ie: $opacity * 100;
+	filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+@function black($opacity) {
+	@return rgba(black, $opacity)
+}
+@function white($opacity) {
+	@return rgba(white, $opacity)
+}
+
+@mixin box-shadow() {
+	box-shadow: 1px 5px 80px 0px rgba(0,0,0,0.30);
+}
+
+// There's a lot of different clearfix hacks out there on the web. This one (http://nicolasgallagher.com/micro-clearfix-hack) I've found it to be the most solid one. Works in IE6 and up.
+@mixin clearfix {
+	*zoom: 1;
+	&::before,
+	&::after {
+		content: " ";
+		display: table;
+	}
+	&::after {
+		clear: both;
+	}
+}
+
+%clearfix {
+	@include clearfix();
+}
+.clearfix {
+	@include clearfix();
+}
+
+//Colors
+@function color($color) {
+	@return map-get($colors, $color);
+}
+
+@mixin color($color, $property-name: color) {
+	 #{$property_name}: color($color);
+}
+
+@mixin hover {
+	&:hover,
+	&:focus,
+	&:active {
+		@content;
+	}
+}
+
+//Iconfont
+@mixin iconfont($content: " ", $font-size: inherit, $color: inherit ) {
+	font-family: $font-iconfont;
+	speak: none;
+	font-style: normal;
+	font-weight: 100;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	content: $content;
+	font-size: $font-size;
+	color: $color;
+	
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@mixin object-fit($width:100%, $height:100%) {
+	object-fit: cover;
+	object-position: center center;
+	width:$width;
+	height:$height;
+}
+
+.object-fit {
+	@include object-fit();
+}
+
+//Good way to hide something but have it still be accessible to screen-readers
+@mixin visuallyhidden {
+	position: absolute;
+	margin: -1px;
+	padding: 0;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+}
+
+%isVisuallyHidden {
+	@include visuallyhidden();
+}
+
+.isVisuallyHidden {
+	@include visuallyhidden();
+}
+
+
+//Uses the Sass-Map defined in partials/variables.scss
+@mixin z-index($level: ground, $important: 'null') {
+	@if ($important == 'important')
+	{
+		z-index: map-get($z-index, $level) !important;
+	}
+	@else {
+		z-index: map-get($z-index, $level);
+	}
+}
+
+// Map Deep Get
+// Usage: $m-breakpoint: map-deep-get($global-config, "grid-breakpoints", "md");
+// Returns: 768px
+@function map-deep-get($map, $keys...) {
+    @each $key in $keys {
+        $map: map-get($map, $key);
+    }
+    @return $map;
+}
+
+// Map-get-next
+// From https://gist.github.com/agorilla/9df052eb1e15d8aea446
+@function map-get-next($map, $key, $fallback: false) {
+
+	// Check if map is valid
+	@if type_of($map) == map {
+
+		// Check if key exists in map
+		@if map_has_key($map, $key) {
+
+			// Init index counter variable
+			$i: 0;
+
+			// Init key index
+			$key-index: false;
+
+			// Traverse map for key
+			@each $map-key, $map-value in $map {
+				// Update index
+				$i: $i + 1;
+
+				// If map key found, set key index
+				@if $map-key == $key {
+					$key-index: $i;
+				}
+
+				// If next index return next value
+				@if $i == $key-index + 1 {
+					@return $map-value;
+				}
+
+				// If last entry return false
+				@if $i == length($map) {
+					@return $fallback;
+				}
+			}
+
+			@warn 'No next map item for key #{$key}';
+			@return $fallback;
+		}
+
+		@warn 'No valid key #{$key} in map';
+		@return $fallback;
+	}
+
+	@warn 'No valid map';
+	@return $fallback;
+}
+
+
+//Custom breakpoint mixin
+@mixin screen($breakpoint: 'xs', $query: 'min', $min-width: NULL, $max-width: NULL) {
+	@if (($min-width != NULL) OR ($max-width != NULL)) {
+		
+		@if (($min-width != NULL) and ($max-width == NULL)) {
+			@media only screen and (min-width: $min-width) {
+				@content;
+			}
+		}
+		
+		@if (($min-width == NULL) and ($max-width != NULL)) {
+			@media only screen and (max-width: $max-width) {
+				@content;
+			}
+		}
+		
+		@if (($min-width != NULL) and ($max-width != NULL)) {
+			@media only screen and (min-width: $min-width) and (max-width: $max-width) {
+				@content;
+			}
+		}
+		
+		
+	}
+	@else {
+		@if ($query == 'min') {		
+			@media only screen and (min-width: map-get($grid-breakpoints, $breakpoint)) {
+				@content;
+			}
+		}
+		@if ($query == 'max') {
+			@media only screen and (max-width: (map-get-next($grid-breakpoints, $breakpoint) - 1)) {
+				@content;
+			}
+		}
+		
+		@if ($query == 'only') {
+			@media only screen and (min-width: map-get($grid-breakpoints, $breakpoint)) and (max-width: (map-get-next($grid-breakpoints, $breakpoint) - 1)) {
+				@content;
+			}
+		}
+	}
+}
+
+
+@mixin gutter($location, $amount: 1) {
+	
+	$margin: floor($grid-gutter-width * $amount);
+	
+	@if $location == "all" {
+		margin: $margin;
+	}
+	@if $location == "top" {
+		margin-top: $margin;
+	}
+	@if $location == "right" {
+		margin-right: $margin;
+	}
+	@if $location == "bottom" {
+		margin-bottom: $margin;
+	}
+	@if $location == "left" {
+		margin-left: $margin;
+	}
+	@if $location == "internal" {
+		padding: $margin;
+	}
+	@if $location == "internal-top" {
+		padding-top: $margin;
+	}
+	@if $location == "internal-right" {
+		padding-right: $margin;
+	}
+	@if $location == "internal-bottom" {
+		padding-bottom: $margin;
+	}
+	@if $location == "internal-left" {
+		padding-left: $margin;
+	}
+}
+
+@function parseInt($n) {
+	@return $n / ($n * 0 + 1);
+}
+
+@mixin font-size($values) {
+	$px : ();
+	$rem: ();
+	
+	@each $value in $values {
+
+		@if $value == 0 or $value == auto {
+			$px : append($px , $value);
+			$rem: append($rem, $value);
+		}
+
+		@else {
+			$unit: unit($value);	 
+			$val: parseInt($value);
+		
+			@if $unit == "px" { 
+				$px : append($px,  $value);
+				$rem: append($rem, ($val / 10 + rem));
+			}
+		
+			@if $unit == "rem" {
+				$px : append($px,  ($val * 10 + px));
+				$rem: append($rem, $value);
+			}
+		}
+	}
+
+	@if $px == $rem {		  
+		font-size: $px; 
+	} @else {
+		font-size: $px; 
+		font-size: $rem;
+	}
+}
+
+
+@mixin browser($browser) {
+	body[browser=#{$browser}] & {
+		@content;
+	}	
+}
+
+@mixin hero-shadow() {
+	text-shadow: rgba(color(black),0.7)0 0px 20px;
+	font-weight: normal;
+}

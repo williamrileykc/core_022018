@@ -1,0 +1,13 @@
+#
+# Apache settings:
+#
+
+# Add correct encoding for SVGZ.
+AddType image/svg+xml svg svgz
+AddEncoding gzip svgz
+
+
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} 80
+RewriteCond %{HTTP_HOST} ^(www\.)?mmgystage\.com$ [NC]
+RewriteRule ^(.*)$ https://core.mmgystage.com/$1 [R,L]

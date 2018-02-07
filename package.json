@@ -1,0 +1,100 @@
+{
+  "name": "Core",
+  "version": "1.0.0",
+  "description": "A collective of vanilla, reusable, and extendable components to aid front end web development on MMGY Global projects.",
+  "main": "gulpfile.js",
+  "author": "Caleb Zahnd, <caleb@calebzahnd.com>",
+  "copyright": "Caleb Zahnd",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "git-rev-sync": "^1.9.1",
+    "gulp": "^3.9.1",
+    "gulp-a11y": "^0.1.2",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-csscomb": "^3.0.8",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-filesize": "0.0.6",
+    "gulp-header": "^1.8.9",
+    "gulp-htmlhint": "0.3.1",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^3.4.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-modernizr": "1.0.0-alpha",
+    "gulp-notify": "^3.0.0",
+    "gulp-phplint": "^0.3.4",
+    "gulp-plumber": "^1.1.0",
+    "gulp-postcss": "^7.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "gulp-wrapper": "^1.0.0",
+    "imagemin-pngquant": "^5.0.1",
+    "moment": "^2.19.1",
+    "postcss-reporter": "^5.0.0",
+    "postcss-scss": "^1.0.2",
+    "run-sequence": "^2.2.0",
+    "stylelint": "^8.2.0",
+    "stylelint-config-standard": "^17.0.0"
+  },
+  "dependencies": {
+    "bowser": "^1.8.0",
+    "jquery": "^2.2.4",
+    "jquery-ui": "^1.12.1",
+    "normalize-scss": "^7.0.0",
+    "rrssb": "^1.14.0"
+  },
+  "paths": {
+    "theme": "dist/assets/",
+    "css": {
+      "src": "src/scss/*.scss",
+      "dist": "css/"
+    },
+    "fonts": {
+      "src": "src/media/fonts/**/*",
+      "dist": "media/fonts"
+    },
+    "html": {
+      "src": "/dist/markup/**/*.html"
+    },
+    "images": {
+      "src": "src/media/images/**/*",
+      "dist": "media/images"
+    },
+    "js": {
+      "concatenate": [
+        "node_modules/bowser/bowser.js",
+        "node_modules/rrssb/js/rrssb.js",
+        "src/js/global-scripts.js",
+        "src/js/**/*.js"
+      ],
+      "copy": [
+        "node_modules/jquery/dist/jquery.min.js"
+      ],
+      "src": "src/js/",
+      "dist": "js/",
+      "concat_filename": "global-ui.js"
+    },
+    "modernizr": {
+      "options": [
+        "setClasses",
+        "addTest",
+        "html5printshiv",
+        "testProp",
+        "fnBind"
+      ],
+      "tests": [
+        "ie8compat"
+      ],
+      "excludeTests": [
+        "hidden"
+      ]
+    },
+    "src": "src/"
+  }
+}
